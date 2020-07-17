@@ -1,6 +1,6 @@
 # ref: https://github.com/chenBright/code_snippets/blob/master/Docker/ubuntu_cpp_environment/Dockerfile
 
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
 ARG USERNAME=user
 ARG PASSWORD=123456
@@ -13,7 +13,7 @@ RUN sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list \
     && apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     # Verify common dependencies and utilities are installed
-    && apt-get -y install --no-install-recommends apt-utils dialog git openssh-client curl less iproute2 procps 2>&1 \
+    && apt-get -y install --no-install-recommends apt-utils inetutils-ping dialog git curl less iproute2 procps 2>&1 \
     #
     # Create a non-root user to use if not already available - see https://aka.ms/vscode-remote/containers/non-root-user.
     && if [ $(getent passwd $USERNAME) ]; then \
@@ -28,6 +28,7 @@ RUN sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list \
         groupadd --gid $USER_GID $USERNAME \
         && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
         # 修改密码
+        && echo "root:$PASSWORD" | chpasswd \
         && echo "$USERNAME:$PASSWORD" | chpasswd \
         # Add sudo support for the non-root user
         && apt-get install -y sudo \
