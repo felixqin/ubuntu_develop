@@ -1,0 +1,12 @@
+
+version: '3'
+services:
+  docker-from-docker:
+    build: .
+    volumes:
+      - "../home:/home"
+      - "../opt:/opt"
+      - "../sdk:/mnt/sdk"
+      - "/Users/charles/code:/mnt/code"
+    ports:
+      - "8022:22"
